@@ -1,0 +1,36 @@
+{
+  "name": "Xennus",
+  "github_username": "Xennus352",
+  "repository": "Xennus352/Xennus352",
+  "tagline": "",
+  "typing_lines": [],
+  "location": "",
+  "timezone": "Asia/Yangon",
+  "currently": "",
+  "setup": {
+    "Operating system": "Arch Linux",
+    "Window manager": "Hyprland"
+  },
+  "tech_stack": {
+    "Systems": [
+      "arch",
+      "linux"
+    ]
+  },
+  "milestones": [],
+  "links": {
+    "Portfolio": "https://soemoekyaw-portfolio.netlify.app/",
+    "Email": "mailto:xennus.dev@gmail.com",
+    "Telegram": "https://t.me/kazue352"
+  },
+  "theme": {
+    "accent": "FF79C6",
+    "secondary": "BD93F9",
+    "background": "0D1117",
+    "text": "C9D1D9"
+  },
+  "sections": {
+    "stats": true,
+    "snake": true
+  }
+}
