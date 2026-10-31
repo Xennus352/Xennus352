@@ -20,6 +20,30 @@ def image(url, alt, width=None):
     return f'<img src="{esc(url)}" alt="{esc(alt)}"{size} />'
 
 
+def header(p):
+    c = p['theme']
+    name = esc(p['name'])
+    setup = esc(' / '.join(p['setup'].values()))
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="330" viewBox="0 0 1200 330" role="img" aria-label="{name}">
+<defs>
+  <linearGradient id="glow" x2="1" y2="1"><stop stop-color="#{c['accent']}"/><stop offset="1" stop-color="#{c['secondary']}"/></linearGradient>
+  <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M36 0H0V36" fill="none" stroke="#{c['secondary']}" stroke-opacity=".09"/></pattern>
+</defs>
+<rect width="1200" height="330" rx="24" fill="#{c['background']}"/>
+<rect width="1200" height="330" rx="24" fill="url(#grid)"/>
+<circle cx="1080" cy="170" r="135" fill="none" stroke="url(#glow)" stroke-opacity=".25"/>
+<circle cx="1080" cy="170" r="95" fill="none" stroke="url(#glow)" stroke-opacity=".5"/>
+<path d="M990 172l60-35v70z M1084 130l-24 82 M1100 137l60 35-60 35" fill="none" stroke="url(#glow)" stroke-width="5" stroke-linejoin="round"/>
+<g font-family="Verdana,Arial,sans-serif">
+<text x="58" y="72" fill="#{c['secondary']}" font-size="15" letter-spacing="4">HELLO, WORLD.</text>
+<text x="54" y="161" fill="#{c['text']}" font-size="76" font-weight="bold">{name}</text>
+<rect x="58" y="185" width="90" height="4" rx="2" fill="url(#glow)"/>
+<text x="58" y="233" fill="#{c['accent']}" font-size="21">{setup}</text>
+<text x="58" y="281" fill="#{c['text']}" opacity=".55" font-size="14">BUILD · EXPLORE · ITERATE</text>
+</g></svg>
+'''
+
+
 def render(p):
     user = p['github_username'] or os.environ.get('GITHUB_REPOSITORY_OWNER', '')
     repo = p['repository'] or os.environ.get('GITHUB_REPOSITORY', '') or (f'{user}/{user}' if user else '')
@@ -29,7 +53,7 @@ def render(p):
         if len(color) != 6 or any(c not in '0123456789abcdefABCDEF' for c in color):
             raise ValueError('Colors must be six hexadecimal digits without #')
     lines = ['<!-- Generated from profile.json. See SETUP.md for customization. -->',
-             '<div align="center">', f'<h1>{esc(p["name"])}</h1>']
+             '<div align="center">', image('./assets/header.svg', p['name'] + ' — Arch Linux & Hyprland', '100%')]
     if p['typing_lines']:
         query = urlencode(dict(font='Fira Code', size=24, pause=1000, color=colors['accent'],
                                center='true', vCenter='true', width=600, lines=';'.join(p['typing_lines'])))
@@ -43,18 +67,19 @@ def render(p):
     for label, url in p['links'].items():
         if urlsplit(url).scheme not in {'https', 'http', 'mailto'}:
             raise ValueError(f'Unsupported URL for {label}')
-        contacts.append(f'<a href="{esc(url)}">{esc(label)}</a>')
+        badge = 'https://img.shields.io/badge/' + quote(label, safe='') + '-' + colors['accent'] + '?style=for-the-badge&labelColor=' + colors['background']
+        contacts.append(f'<a href="{esc(url)}">{image(badge, label)}</a>')
     if contacts:
         lines.append(f'<p>{" · ".join(contacts)}</p>')
     lines.extend(['</div>', ''])
     if p['currently']:
         lines.extend(['### Currently', '', f'<p>{esc(p["currently"])}</p>', ''])
     if p['setup']:
-        lines.extend(['### My setup', '', '<ul>'])
-        lines.extend(f'<li><strong>{esc(k)}:</strong> {esc(v)}</li>' for k, v in p['setup'].items())
-        lines.extend(['</ul>', ''])
+        lines.extend(['---', '', '### ⌘ My workspace', '', '<table>', '<tr><th>Environment</th><th>Daily driver</th></tr>'])
+        lines.extend(f'<tr><td>{esc(k)}</td><td><strong>{esc(v)}</strong></td></tr>' for k, v in p['setup'].items())
+        lines.extend(['</table>', ''])
     if any(p['tech_stack'].values()):
-        lines.extend(['### Tech stack', ''])
+        lines.extend(['### ◇ Tools & technologies', ''])
         for label, skills in p['tech_stack'].items():
             if skills:
                 query = urlencode(dict(i=','.join(skills), perline=8, theme='dark'))
@@ -73,17 +98,15 @@ def render(p):
             lines.append(f'<li><strong>{esc(event["title"])}</strong>{location}<br>{period}{description}</li>')
         lines.extend(['</ul>', ''])
     if p['sections']['stats'] and user:
-        query = dict(username=user, hide_border='true', bg_color=colors['background'],
-                     title_color=colors['accent'], icon_color=colors['secondary'], text_color=colors['text'])
-        base = 'https://github-readme-stats-eight-theta.vercel.app/api'
-        lines.extend(['### GitHub stats', '', '<div align="center">',
-                      image(base + '?' + urlencode({**query, 'show_icons':'true'}), f"{user}'s GitHub stats", '48%'),
-                      image(base + '/top-langs/?' + urlencode({**query, 'layout':'compact'}), 'Top languages', '48%'), '</div>', ''])
+        lines.extend(['---', '', '### ↗ GitHub activity', '', '<div align="center">',
+                      image('./assets/github-stats.svg', f"{user}'s real GitHub stats", '49%'),
+                      image('./assets/top-languages.svg', 'Languages across public non-fork repositories', '49%'), '</div>', '',
+                      f'<p align="center"><sub>From GitHub’s API · refreshed daily · <a href="https://github.com/{esc(user)}?tab=repositories">Explore my repositories ↗</a></sub></p>', ''])
     if p['sections']['snake'] and repo:
-        raw = 'https://raw.githubusercontent.com/' + quote(repo, safe='/') + '/output/'
-        lines.extend(['### Contributions', '', '<picture>',
-                      f'<source media="(prefers-color-scheme: dark)" srcset="{raw}github-contribution-grid-snake-dark.svg">',
-                      image(raw + 'github-contribution-grid-snake.svg', 'Contribution snake animation'), '</picture>', ''])
+        lines.extend(['### ∿ A year in contributions', '', '<div align="center">', '<picture>',
+                      '<source media="(prefers-color-scheme: dark)" srcset="./assets/github-contribution-grid-snake-dark.svg">',
+                      image('./assets/github-contribution-grid-snake.svg', 'Snake animation of real GitHub contributions', '100%'), '</picture>', '</div>', '',
+                      '<p align="center"><sub>One square, one day. Always building.</sub></p>', ''])
     return '\n'.join(lines)
 
 
@@ -99,6 +122,9 @@ def main():
             raise SystemExit('README is outdated. Run python3 scripts/render_profile.py')
         print('README matches profile.json')
     else:
+        assets = ROOT / 'assets'
+        assets.mkdir(exist_ok=True)
+        (assets / 'header.svg').write_text(header(json.loads(args.config.read_text())))
         args.output.write_text(content)
         print(f'Generated {args.output.name}')
 

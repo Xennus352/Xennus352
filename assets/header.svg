@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="330" viewBox="0 0 1200 330" role="img" aria-label="Xennus">
+<defs>
+  <linearGradient id="glow" x2="1" y2="1"><stop stop-color="#FF79C6"/><stop offset="1" stop-color="#BD93F9"/></linearGradient>
+  <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M36 0H0V36" fill="none" stroke="#BD93F9" stroke-opacity=".09"/></pattern>
+</defs>
+<rect width="1200" height="330" rx="24" fill="#0D1117"/>
+<rect width="1200" height="330" rx="24" fill="url(#grid)"/>
+<circle cx="1080" cy="170" r="135" fill="none" stroke="url(#glow)" stroke-opacity=".25"/>
+<circle cx="1080" cy="170" r="95" fill="none" stroke="url(#glow)" stroke-opacity=".5"/>
+<path d="M990 172l60-35v70z M1084 130l-24 82 M1100 137l60 35-60 35" fill="none" stroke="url(#glow)" stroke-width="5" stroke-linejoin="round"/>
+<g font-family="Verdana,Arial,sans-serif">
+<text x="58" y="72" fill="#BD93F9" font-size="15" letter-spacing="4">HELLO, WORLD.</text>
+<text x="54" y="161" fill="#C9D1D9" font-size="76" font-weight="bold">Xennus</text>
+<rect x="58" y="185" width="90" height="4" rx="2" fill="url(#glow)"/>
+<text x="58" y="233" fill="#FF79C6" font-size="21">Arch Linux / Hyprland</text>
+<text x="58" y="281" fill="#C9D1D9" opacity=".55" font-size="14">BUILD · EXPLORE · ITERATE</text>
+</g></svg>
