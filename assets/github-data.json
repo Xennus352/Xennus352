@@ -1,6 +1,6 @@
 {
   "username": "Xennus352",
-  "updated_at": "2026-11-10T07:30:55.491361+00:00",
+  "updated_at": "2026-11-11T06:49:04.941918+00:00",
   "public_repos": 42,
   "followers": 3,
   "stars": 65,
@@ -8,11 +8,11 @@
   "contributions_past_year": 271,
   "language_bytes": {
     "TypeScript": 6591681,
-    "HTML": 1996644,
+    "HTML": 1983825,
     "JavaScript": 1914761,
     "CSS": 289961,
-    "Python": 2485948,
-    "Shell": 34853,
+    "Python": 2490381,
+    "Shell": 34171,
     "Vue": 698,
     "Dockerfile": 3289,
     "Java": 1257930,
@@ -28,8 +28,8 @@
     "PLpgSQL": 99721,
     "Batchfile": 8372,
     "PowerShell": 7116,
-    "C#": 1163940,
-    "ShaderLab": 187755,
+    "C#": 1032037,
+    "ShaderLab": 185806,
     "HLSL": 19973,
     "Objective-C++": 565
   }
